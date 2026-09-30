@@ -1,0 +1,26 @@
+name: tests
+
+# la pipeline se lance à chaque push
+on: push
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer le code du repository
+        uses: actions/checkout@v4
+
+      - name: Installer Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Installer pytest et mypy
+        run: pip install pytest mypy
+
+      # mypy est lancé avant les tests unitaires
+      - name: Vérifier le typage avec mypy
+        run: mypy .
+
+      - name: Lancer les tests unitaires
+        run: pytest test_lib.py
